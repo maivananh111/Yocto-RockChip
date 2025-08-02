@@ -156,6 +156,16 @@
 			     &i2s2m0_sdo>;
 };
 
+&i2c1 {
+	status = "okay";
+	clock-frequency = <100000>;
+
+	fuel-gauge@55 {
+		compatible = "ti,bq27426";
+		reg = <0x55>;
+	};
+};
+
 &pwm0 {
 	status = "okay";
 	pinctrl-names = "active";
