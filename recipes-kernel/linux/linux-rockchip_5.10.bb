@@ -4,12 +4,16 @@
 require recipes-kernel/linux/linux-yocto.inc
 require linux-rockchip.inc
 
+FILESEXTRAPATHS:prepend := "${THISDIR}/frl-rk3566:"
+
 inherit local-git
 
 SRCREV = "72de5a560a44fb81549f1da325a1b3e323a7aaf7"
 SRC_URI = " \
 	git://github.com/JeffyCN/mirrors.git;protocol=https;nobranch=1;branch=kernel-5.10-2022_01_10; \
 	file://${THISDIR}/files/cgroups.cfg \
+	file://rk3566-frl-v1.0.dts \
+	file://rk3566-frl.dtsi \
 "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
@@ -21,6 +25,11 @@ SRC_URI:append = " ${@bb.utils.contains('IMAGE_FSTYPES', 'ext4', \
 		   'file://${THISDIR}/files/ext4.cfg', \
 		   '', \
 		   d)}"
+
+do_configure:prepend() {
+    cp ${WORKDIR}/rk3566-frl-v1.0.dts ${S}/arch/arm64/boot/dts/rockchip/
+    cp ${WORKDIR}/rk3566-frl.dtsi ${S}/arch/arm64/boot/dts/rockchip/
+}
 
 do_patch:append() {
 	sed -i 's/-I\($(BCMDHD_ROOT)\)/-I$(srctree)\/\1/g' \

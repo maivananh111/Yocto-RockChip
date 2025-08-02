@@ -1,0 +1,112 @@
+From f05a34d880907e39977402f2398860af230403e8 Mon Sep 17 00:00:00 2001
+From: maivananh111 <aaanh01@gmail.com>
+Date: Sat, 2 Aug 2025 15:04:36 +0700
+Subject: [PATCH 4/4] misc: rockchip: rk809-powerkey: Mapping poweroff to long
+ press
+
+Signed-off-by: maivananh111 <aaanh01@gmail.com>
+---
+ drivers/input/misc/rk805-pwrkey.c | 18 +++++++++---------
+ drivers/mfd/rk808.c               |  4 +++-
+ include/linux/mfd/rk808.h         |  6 +++++-
+ 3 files changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/input/misc/rk805-pwrkey.c b/drivers/input/misc/rk805-pwrkey.c
+index 76982176335e..c67300d9448a 100644
+--- a/drivers/input/misc/rk805-pwrkey.c
++++ b/drivers/input/misc/rk805-pwrkey.c
+@@ -16,7 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ 
+-static irqreturn_t pwrkey_fall_irq(int irq, void *_pwr)
++static irqreturn_t pwrkey_longpress_irq(int irq, void *_pwr)
+ {
+ 	struct input_dev *pwr = _pwr;
+ 
+@@ -39,7 +39,7 @@ static irqreturn_t pwrkey_rise_irq(int irq, void *_pwr)
+ static int rk805_pwrkey_probe(struct platform_device *pdev)
+ {
+ 	struct input_dev *pwr;
+-	int fall_irq, rise_irq;
++	int longpress_irq, rise_irq;
+ 	struct device_node *np;
+ 	int err;
+ 
+@@ -60,20 +60,20 @@ static int rk805_pwrkey_probe(struct platform_device *pdev)
+ 	pwr->id.bustype = BUS_HOST;
+ 	input_set_capability(pwr, EV_KEY, KEY_POWER);
+ 
+-	fall_irq = platform_get_irq(pdev, 0);
+-	if (fall_irq < 0)
+-		return fall_irq;
++	longpress_irq = platform_get_irq(pdev, 0);
++	if (longpress_irq < 0)
++		return longpress_irq;
+ 
+ 	rise_irq = platform_get_irq(pdev, 1);
+ 	if (rise_irq < 0)
+ 		return rise_irq;
+ 
+-	err = devm_request_any_context_irq(&pwr->dev, fall_irq,
+-					   pwrkey_fall_irq,
++	err = devm_request_any_context_irq(&pwr->dev, longpress_irq,
++					   pwrkey_longpress_irq,
+ 					   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-					   "rk805_pwrkey_fall", pwr);
++					   "rk805_pwrkey_longpress", pwr);
+ 	if (err < 0) {
+-		dev_err(&pdev->dev, "Can't register fall irq: %d\n", err);
++		dev_err(&pdev->dev, "Can't register longpress irq: %d\n", err);
+ 		return err;
+ 	}
+ 
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 4eda6213174c..bdef501a8dc5 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -212,7 +212,7 @@ static const struct resource rk816_pwrkey_resources[] = {
+ };
+ 
+ static const struct resource rk817_pwrkey_resources[] = {
+-	DEFINE_RES_IRQ(RK817_IRQ_PWRON_FALL),
++	DEFINE_RES_IRQ(RK817_IRQ_PWRON_LP),
+ 	DEFINE_RES_IRQ(RK817_IRQ_PWRON_RISE),
+ };
+ 
+@@ -442,6 +442,8 @@ static const struct rk808_reg_data rk817_pre_init_reg[] = {
+ 	{RK817_GPIO_INT_CFG, RK817_INT_POL_MSK, RK817_INT_POL_L},
+ 	{RK817_SYS_CFG(1), RK817_HOTDIE_TEMP_MSK | RK817_TSD_TEMP_MSK,
+ 					   RK817_HOTDIE_105 | RK817_TSD_140},
++	{RK817_PMIC_PWRON_KEY_REG, RK817_PWRON_LP_TM_SEL_MSK,
++				RK817_PWRON_LP_TM_SEL0 | RK817_PWRON_LP_TM_SEL1}
+ };
+ 
+ static const struct rk808_reg_data rk818_pre_init_reg[] = {
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index fbffa38b061c..feca64cf6bc8 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -1194,6 +1194,10 @@ enum rk809_reg_id {
+ 
+ #define RK817_ON_SOURCE_REG		0xf5
+ #define RK817_OFF_SOURCE_REG		0xf6
++#define RK817_PMIC_PWRON_KEY_REG	0xf7
++#define RK817_PWRON_LP_TM_SEL0		BIT(2)
++#define RK817_PWRON_LP_TM_SEL1		BIT(3)
++#define RK817_PWRON_LP_TM_SEL_MSK	(BIT(2) | BIT(3))
+ 
+ /* INTERRUPT REGISTER */
+ #define RK817_INT_STS_REG0		0xf8
+@@ -1208,7 +1212,7 @@ enum rk809_reg_id {
+ #define RK817_IRQ_PWRON_FALL		0
+ #define RK817_IRQ_PWRON_RISE		1
+ #define RK817_IRQ_PWRON			2
+-#define RK817_IRQ_PWMON_LP		3
++#define RK817_IRQ_PWRON_LP		3
+ #define RK817_IRQ_HOTDIE		4
+ #define RK817_IRQ_RTC_ALARM		5
+ #define RK817_IRQ_RTC_PERIOD		6
+-- 
+2.34.1
+

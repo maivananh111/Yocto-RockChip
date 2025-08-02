@@ -19,6 +19,12 @@ inherit allarch deploy
 do_install() {
 	install -d ${D}/${nonarch_base_libdir}/firmware/rtlbt/
 	install -d ${D}/${nonarch_base_libdir}/firmware/aic8800D80/
+	install -d ${D}/${nonarch_base_libdir}/firmware/brcm/
+
+	cp -r ${S}/firmware/broadcom/AP6256/bt/* \
+		${D}/${nonarch_base_libdir}/firmware/brcm/
+	cp -r ${S}/firmware/broadcom/AP6256/wifi/* \
+		${D}/${nonarch_base_libdir}/firmware/brcm/
 
 	cp -r ${S}/firmware/aic/usb/aic8800D80/* \
 		${D}/${nonarch_base_libdir}/firmware/aic8800D80/
@@ -42,6 +48,8 @@ PACKAGES =+ " \
 	${PN}-ap6236-bt \
 	${PN}-ap6255-wifi \
 	${PN}-ap6255-bt \
+	${PN}-ap6256-wifi \
+	${PN}-ap6256-bt \
 	${PN}-ap6275p-wifi \
 	${PN}-ap6275s-wifi \
 	${PN}-ap6275-bt \
@@ -86,6 +94,19 @@ FILES:${PN}-ap6255-wifi = " \
 FILES:${PN}-ap6255-bt = " \
 	${nonarch_base_libdir}/firmware/BCM4345C0_ap.hcd \
 	${nonarch_base_libdir}/firmware/BCM4345C0.hcd \
+"
+
+FILES:${PN}-ap6256-wifi = " \
+	${nonarch_base_libdir}/firmware/fw_bcm43456c5_ag.bin \
+	${nonarch_base_libdir}/firmware/nvram_ap6256.txt \
+	${nonarch_base_libdir}/firmware/brcm/fw_bcm43456c5_ag.bin \
+	${nonarch_base_libdir}/firmware/brcm/nvram_ap6256.txt \
+"
+FILES:${PN}-ap6256-bt = " \
+	${nonarch_base_libdir}/firmware/BCM4345C5_ap.hcd \
+	${nonarch_base_libdir}/firmware/BCM4345C5.hcd \
+	${nonarch_base_libdir}/firmware/brcm/BCM4345C5_ap.hcd \
+	${nonarch_base_libdir}/firmware/brcm/BCM4345C5.hcd \
 "
 
 FILES:${PN}-ap6275p-wifi = " \

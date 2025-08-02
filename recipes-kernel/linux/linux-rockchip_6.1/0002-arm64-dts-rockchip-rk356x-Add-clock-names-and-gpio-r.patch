@@ -1,0 +1,71 @@
+From 95d2a08bd55ac47ae93a94b533cbeb7ad45f29cb Mon Sep 17 00:00:00 2001
+From: maivananh111 <aaanh01@gmail.com>
+Date: Fri, 1 Aug 2025 22:10:18 +0700
+Subject: [PATCH 2/4] arm64: dts: rockchip: rk356x: Add clock-names and
+ gpio-ranges for gpio banks
+
+Based on commit 'arm64: dts: rockchip: rk356x add 'clock-names' for gpio nodes'
+and 'arm64: dts: rockchip: add gpio-ranges property to gpio nodes'
+
+Signed-off-by: maivananh111 <aaanh01@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+index bada80a16e9c..e203b7816fc2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+@@ -3565,7 +3565,9 @@ gpio0: gpio@fdd60000 {
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x0 0xfdd60000 0x0 0x100>;
+ 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "bus", "db";
+ 			clocks = <&pmucru PCLK_GPIO0>, <&pmucru DBCLK_GPIO0>;
++			gpio-ranges = <&pinctrl 0 0 32>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+@@ -3576,7 +3578,9 @@ gpio1: gpio@fe740000 {
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x0 0xfe740000 0x0 0x100>;
+ 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "bus", "db";
+ 			clocks = <&cru PCLK_GPIO1>, <&cru DBCLK_GPIO1>;
++			gpio-ranges = <&pinctrl 0 32 32>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+@@ -3587,7 +3591,9 @@ gpio2: gpio@fe750000 {
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x0 0xfe750000 0x0 0x100>;
+ 			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "bus", "db";
+ 			clocks = <&cru PCLK_GPIO2>, <&cru DBCLK_GPIO2>;
++			gpio-ranges = <&pinctrl 0 64 32>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+@@ -3598,7 +3604,9 @@ gpio3: gpio@fe760000 {
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x0 0xfe760000 0x0 0x100>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "bus", "db";
+ 			clocks = <&cru PCLK_GPIO3>, <&cru DBCLK_GPIO3>;
++			gpio-ranges = <&pinctrl 0 96 32>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+@@ -3609,7 +3617,9 @@ gpio4: gpio@fe770000 {
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x0 0xfe770000 0x0 0x100>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "bus", "db";
+ 			clocks = <&cru PCLK_GPIO4>, <&cru DBCLK_GPIO4>;
++			gpio-ranges = <&pinctrl 0 128 32>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-- 
+2.34.1
+
