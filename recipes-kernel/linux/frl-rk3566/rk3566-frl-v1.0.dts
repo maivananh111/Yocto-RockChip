@@ -29,7 +29,21 @@
 		status = "okay";
 	};
 
-	bt-sound {
+	wireless_bluetooth: wireless-bluetooth {
+		compatible = "bluetooth-platdata";
+		clocks = <&rk809 1>;
+		clock-names = "ext_clock";
+		uart_rts_gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
+		pinctrl-names = "default", "rts_gpio";
+		pinctrl-0 = <&uart1m0_rtsn &bt_poweren &bt_wake_l &bt_host_wake_irq>;
+		pinctrl-1 = <&uart1m0_rtsn_gpios>;
+		BT,power_gpio    = <&gpio2 RK_PB7 GPIO_ACTIVE_HIGH>;
+		BT,wake_gpio     = <&gpio2 RK_PC1 GPIO_ACTIVE_HIGH>;
+		BT,wake_host_irq = <&gpio2 RK_PC0 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
+	wireless_bluetooth_sound: wireless-bluetooth-sound {
 		compatible = "simple-audio-card";
 		simple-audio-card,format = "dsp_b";
 		simple-audio-card,bitclock-inversion;
@@ -42,13 +56,14 @@
 		simple-audio-card,cpu {
 			sound-dai = <&i2s2_2ch>;
 		};
+
 		sound2_master:simple-audio-card,codec {
 			#sound-dai-cells = <0>;
-			sound-dai = <&bt_sco>;
+			sound-dai = <&wireless_bluetooth_sco>;
 		};
 	};
 
-	bt_sco: bt-sco {
+	wireless_bluetooth_sco: wireless-bluetooth-sco {
 		compatible = "delta,dfbmcs320";
 		#sound-dai-cells = <0>;
 		status = "okay";
@@ -127,24 +142,9 @@
 };
 	
 &uart1 {
-    pinctrl-names = "default";
-	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
-	uart-has-rtscts;
 	status = "okay";
-
-	wireless_bluetooth: bluetooth {
-		compatible = "brcm,bcm4345c5";
-		clocks = <&rk809 1>;
-		clock-names = "lpo";
-		max-speed = <1500000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_reset_h>;
-		device-wakeup-gpios = <&gpio2 RK_PC1 GPIO_ACTIVE_HIGH>;
-		host-wakeup-gpios = <&gpio2 RK_PC0 GPIO_ACTIVE_HIGH>;
-		shutdown-gpios = <&gpio2 RK_PB7 GPIO_ACTIVE_HIGH>;
-		vbat-supply = <&vcc3v3_sys>;
-		vddio-supply = <&vcc_1v8>;
-	};
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn>;
 };
 
 &i2s2_2ch {
@@ -198,11 +198,15 @@
     };
 
     wireless-bluetooth {
-		bt_reset_h: bt-reset-h {
+		uart1m0_rtsn_gpios: uart1m0-rtsn-gpios {
+			rockchip,pins = <2 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		bt_poweren: bt-poweren {
 			rockchip,pins = <2 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 
-		bt_host_wake_l: bt-host-wake-l {
+		bt_host_wake_irq: bt-host-wake-irq {
 			rockchip,pins = <2 RK_PC0 RK_FUNC_GPIO &pcfg_pull_down>;
 		};
 
