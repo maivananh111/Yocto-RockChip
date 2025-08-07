@@ -1,8 +1,7 @@
-From 3d3019f352f5620db9f39b58943c64afd920d9f8 Mon Sep 17 00:00:00 2001
+From c2aef125b9a6b8d4bf9866a1ecdbe8f3c2f5342c Mon Sep 17 00:00:00 2001
 From: maivananh111 <aaanh01@gmail.com>
 Date: Mon, 28 Jul 2025 00:20:19 +0700
-Subject: [PATCH 1/4] arm64: dts: rockchip: Makefile: Add support
- RK3566-FRL-V1.0
+Subject: [PATCH 1/5] dts: rockchip: Makefile: Add support RK3566-FRL-V1.0
 
 Signed-off-by: maivananh111 <aaanh01@gmail.com>
 ---
@@ -10,14 +9,14 @@ Signed-off-by: maivananh111 <aaanh01@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index dc1148a1d017..00549f6f2dfc 100644
+index dc1148a1d017..818c1663ea41 100644
 --- a/arch/arm64/boot/dts/rockchip/Makefile
 +++ b/arch/arm64/boot/dts/rockchip/Makefile
 @@ -154,6 +154,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-evb3-ddr3-v10-linux.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-evb5-lp4x-v10.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-radxa-zero-3e.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-radxa-zero-3w-aic8800d80.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-frl.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-frl-v1.0.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-rk817-eink.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-rk817-eink-w6.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-rk817-eink-w103.dtb

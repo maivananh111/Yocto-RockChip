@@ -1,7 +1,7 @@
-From 504831d8145376262a1bf90eb0d64537cf2197c1 Mon Sep 17 00:00:00 2001
+From 52b4083771e4dc66c05cbc379c1c5b4213076216 Mon Sep 17 00:00:00 2001
 From: maivananh111 <aaanh01@gmail.com>
 Date: Fri, 1 Aug 2025 23:17:49 +0700
-Subject: [PATCH 3/4] gpio: rockchip: Update debounce config function
+Subject: [PATCH 4/5] gpio: rockchip: Update debounce config function
 
 ---
  drivers/gpio/gpio-rockchip.c | 4 ++--

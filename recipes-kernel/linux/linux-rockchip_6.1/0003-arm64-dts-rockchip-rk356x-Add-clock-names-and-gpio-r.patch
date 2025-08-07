@@ -1,7 +1,7 @@
-From 95d2a08bd55ac47ae93a94b533cbeb7ad45f29cb Mon Sep 17 00:00:00 2001
+From a4e319d999a3c78f88077ad570fd2e10195771ab Mon Sep 17 00:00:00 2001
 From: maivananh111 <aaanh01@gmail.com>
 Date: Fri, 1 Aug 2025 22:10:18 +0700
-Subject: [PATCH 2/4] arm64: dts: rockchip: rk356x: Add clock-names and
+Subject: [PATCH 3/5] arm64: dts: rockchip: rk356x: Add clock-names and
  gpio-ranges for gpio banks
 
 Based on commit 'arm64: dts: rockchip: rk356x add 'clock-names' for gpio nodes'
