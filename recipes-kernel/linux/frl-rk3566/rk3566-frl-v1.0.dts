@@ -124,6 +124,21 @@
 	};
 };
 
+&rk809_sound {
+	simple-audio-card,widgets =
+		"Microphone", "Mic Jack",
+		"Headphone", "Headphones";
+	simple-audio-card,routing =
+		"ADC L", "MICL",
+		"ADC R", "MICR",
+		"HPOL", "DAC L",
+		"HPOR", "DAC R",
+		"MICL", "Mic Jack",
+		"MICR", "Mic Jack",
+		"Headphones", "HPOL",
+		"Headphones", "HPOR";
+};
+
 &sdmmc1 {
     bus-width = <4>;
 	cap-sd-highspeed;

@@ -354,7 +354,6 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&i2s1m0_mclk>;
 			hp-volume = <20>;
-			spk-volume = <20>;
 			capture-volume = <20>;
 			status = "okay";
 		};
