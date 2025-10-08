@@ -74,6 +74,20 @@
 			linux,default-trigger = "heartbeat";
 		};
 	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		rknpu_reserved: rknpu {
+			compatible = "shared-dma-pool";
+			inactive;
+			reusable;
+			size = <0x0 0x20000000>;
+			alignment = <0x0 0x1000>;
+		};
+	};
 };
 
 &i2c0 {
@@ -370,6 +384,14 @@
 		     &i2s1m0_sdo0>;
 };
 
+&iep {
+	status = "okay";
+};
+
+&iep_mmu {
+	status = "okay";
+};
+
 &mpp_srv {
 	status = "okay";
 };
@@ -410,7 +432,14 @@
 	status = "okay";
 };
 
+&bus_npu {
+	bus-supply = <&vdd_logic>;
+	pvtm-supply = <&vdd_cpu>;
+	status = "okay";
+};
+
 &rknpu {
+	memory-region = <&rknpu_reserved>;
 	rknpu-supply = <&vdd_npu>;
 	status = "okay";
 };

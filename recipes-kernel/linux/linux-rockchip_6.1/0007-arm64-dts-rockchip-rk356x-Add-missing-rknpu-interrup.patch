@@ -1,0 +1,26 @@
+From 3a11c97ad7b06a0ee29e0eaf0b3cb4217f2fc596 Mon Sep 17 00:00:00 2001
+From: maivananh111 <aaanh01@gmail.com>
+Date: Tue, 7 Oct 2025 23:16:33 +0700
+Subject: [PATCH] arm64: dts: rockchip: rk356x: Add missing rknpu interrupt
+ name
+
+Signed-off-by: maivananh111 <aaanh01@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+index bada80a16e9c..c5e2f5eda507 100644
+--- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+@@ -1101,6 +1101,7 @@ rknpu: npu@fde40000 {
+ 		compatible = "rockchip,rk3568-rknpu", "rockchip,rknpu";
+ 		reg = <0x0 0xfde40000 0x0 0x10000>;
+ 		interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "npu_irq";
+ 		clocks = <&scmi_clk 2>, <&cru CLK_NPU>, <&cru ACLK_NPU>, <&cru HCLK_NPU>;
+ 		clock-names = "scmi_clk", "clk", "aclk", "hclk";
+ 		assigned-clocks = <&cru CLK_NPU>;
+-- 
+2.34.1
+
