@@ -1,7 +1,7 @@
-From eadca6e4de117722918b30aa1cef199bd8edb936 Mon Sep 17 00:00:00 2001
+From 0002960e6324c07d999e05cc4aea9bfc6eed546e Mon Sep 17 00:00:00 2001
 From: maivananh111 <aaanh01@gmail.com>
-Date: Sat, 2 Aug 2025 15:04:36 +0700
-Subject: [PATCH 5/5] misc: rockchip: rk809-powerkey: Mapping poweroff to long
+Date: Tue, 28 Oct 2025 22:27:58 +0700
+Subject: [PATCH] misc: rockchip: rk809-powerkey: Mapping poweroff to long
  press
 
 Signed-off-by: maivananh111 <aaanh01@gmail.com>
@@ -12,11 +12,11 @@ Signed-off-by: maivananh111 <aaanh01@gmail.com>
  3 files changed, 17 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/input/misc/rk805-pwrkey.c b/drivers/input/misc/rk805-pwrkey.c
-index 76873aa005b4..c286d1f1c899 100644
+index 76982176335e..c67300d9448a 100644
 --- a/drivers/input/misc/rk805-pwrkey.c
 +++ b/drivers/input/misc/rk805-pwrkey.c
-@@ -15,7 +15,7 @@
- #include <linux/module.h>
+@@ -16,7 +16,7 @@
+ #include <linux/of.h>
  #include <linux/platform_device.h>
  
 -static irqreturn_t pwrkey_fall_irq(int irq, void *_pwr)
@@ -24,16 +24,16 @@ index 76873aa005b4..c286d1f1c899 100644
  {
  	struct input_dev *pwr = _pwr;
  
-@@ -38,7 +38,7 @@ static irqreturn_t pwrkey_rise_irq(int irq, void *_pwr)
+@@ -39,7 +39,7 @@ static irqreturn_t pwrkey_rise_irq(int irq, void *_pwr)
  static int rk805_pwrkey_probe(struct platform_device *pdev)
  {
  	struct input_dev *pwr;
 -	int fall_irq, rise_irq;
 +	int longpress_irq, rise_irq;
+ 	struct device_node *np;
  	int err;
  
- 	pwr = devm_input_allocate_device(&pdev->dev);
-@@ -52,20 +52,20 @@ static int rk805_pwrkey_probe(struct platform_device *pdev)
+@@ -60,20 +60,20 @@ static int rk805_pwrkey_probe(struct platform_device *pdev)
  	pwr->id.bustype = BUS_HOST;
  	input_set_capability(pwr, EV_KEY, KEY_POWER);
  
@@ -62,33 +62,33 @@ index 76873aa005b4..c286d1f1c899 100644
  	}
  
 diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-index d14cba6b2ac8..de864aff5a0e 100644
+index 4eda6213174c..4fc71b06cd8c 100644
 --- a/drivers/mfd/rk808.c
 +++ b/drivers/mfd/rk808.c
-@@ -127,8 +127,8 @@ static const struct resource rk805_key_resources[] = {
+@@ -212,8 +212,8 @@ static const struct resource rk816_pwrkey_resources[] = {
  };
  
  static const struct resource rk817_pwrkey_resources[] = {
 +	DEFINE_RES_IRQ(RK817_IRQ_PWRON_LP),
- 	DEFINE_RES_IRQ(RK817_IRQ_PWRON_RISE),
--	DEFINE_RES_IRQ(RK817_IRQ_PWRON_FALL),
+ 	DEFINE_RES_IRQ(RK817_IRQ_PWRON_FALL),
+-	DEFINE_RES_IRQ(RK817_IRQ_PWRON_RISE),
  };
  
- static const struct resource rk817_charger_resources[] = {
-@@ -300,6 +300,8 @@ static const struct rk808_reg_data rk817_pre_init_reg[] = {
+ static const struct mfd_cell rk801s[] = {
+@@ -442,6 +442,8 @@ static const struct rk808_reg_data rk817_pre_init_reg[] = {
  	{RK817_GPIO_INT_CFG, RK817_INT_POL_MSK, RK817_INT_POL_L},
  	{RK817_SYS_CFG(1), RK817_HOTDIE_TEMP_MSK | RK817_TSD_TEMP_MSK,
  					   RK817_HOTDIE_105 | RK817_TSD_140},
 +	{RK817_PMIC_PWRON_KEY_REG, RK817_PWRON_LP_TM_SEL_MSK,
-++				RK817_PWRON_LP_TM_SEL0 | RK817_PWRON_LP_TM_SEL1}
++				RK817_PWRON_LP_TM_SEL0 | RK817_PWRON_LP_TM_SEL1}
  };
  
  static const struct rk808_reg_data rk818_pre_init_reg[] = {
 diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-index 9af1f3105f80..558546d48b93 100644
+index fbffa38b061c..feca64cf6bc8 100644
 --- a/include/linux/mfd/rk808.h
 +++ b/include/linux/mfd/rk808.h
-@@ -643,6 +643,10 @@ enum rk809_reg_id {
+@@ -1194,6 +1194,10 @@ enum rk809_reg_id {
  
  #define RK817_ON_SOURCE_REG		0xf5
  #define RK817_OFF_SOURCE_REG		0xf6
@@ -99,7 +99,7 @@ index 9af1f3105f80..558546d48b93 100644
  
  /* INTERRUPT REGISTER */
  #define RK817_INT_STS_REG0		0xf8
-@@ -657,7 +661,7 @@ enum rk809_reg_id {
+@@ -1208,7 +1212,7 @@ enum rk809_reg_id {
  #define RK817_IRQ_PWRON_FALL		0
  #define RK817_IRQ_PWRON_RISE		1
  #define RK817_IRQ_PWRON			2

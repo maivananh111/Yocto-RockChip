@@ -1,0 +1,102 @@
+From f7df41afdb6a77aaf6e5ec46b118015f3e1d4574 Mon Sep 17 00:00:00 2001
+From: maivananh111 <aaanh01@gmail.com>
+Date: Wed, 8 Oct 2025 22:58:46 +0700
+Subject: [PATCH] rk3566-frl: kernel: Add support RKNPU
+
+Signed-off-by: maivananh111 <aaanh01@gmail.com>
+---
+ .../linux/frl-rk3566/rk3566-frl.dtsi          | 29 +++++++++++++++++++
+ ...ip-rk356x-Add-missing-rknpu-interrup.patch | 26 +++++++++++++++++
+ 2 files changed, 55 insertions(+)
+ create mode 100644 recipes-kernel/linux/linux-rockchip_6.1/0007-arm64-dts-rockchip-rk356x-Add-missing-rknpu-interrup.patch
+
+diff --git a/recipes-kernel/linux/frl-rk3566/rk3566-frl.dtsi b/recipes-kernel/linux/frl-rk3566/rk3566-frl.dtsi
+index 52379bf..3f38ad5 100644
+--- a/recipes-kernel/linux/frl-rk3566/rk3566-frl.dtsi
++++ b/recipes-kernel/linux/frl-rk3566/rk3566-frl.dtsi
+@@ -74,6 +74,20 @@
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		rknpu_reserved: rknpu {
++			compatible = "shared-dma-pool";
++			inactive;
++			reusable;
++			size = <0x0 0x20000000>;
++			alignment = <0x0 0x1000>;
++		};
++	};
+ };
+ 
+ &i2c0 {
+@@ -370,6 +384,14 @@
+ 		     &i2s1m0_sdo0>;
+ };
+ 
++&iep {
++	status = "okay";
++};
++
++&iep_mmu {
++	status = "okay";
++};
++
+ &mpp_srv {
+ 	status = "okay";
+ };
+@@ -410,7 +432,14 @@
+ 	status = "okay";
+ };
+ 
++&bus_npu {
++	bus-supply = <&vdd_logic>;
++	pvtm-supply = <&vdd_cpu>;
++	status = "okay";
++};
++
+ &rknpu {
++	memory-region = <&rknpu_reserved>;
+ 	rknpu-supply = <&vdd_npu>;
+ 	status = "okay";
+ };
+diff --git a/recipes-kernel/linux/linux-rockchip_6.1/0007-arm64-dts-rockchip-rk356x-Add-missing-rknpu-interrup.patch b/recipes-kernel/linux/linux-rockchip_6.1/0007-arm64-dts-rockchip-rk356x-Add-missing-rknpu-interrup.patch
+new file mode 100644
+index 0000000..30c54d8
+--- /dev/null
++++ b/recipes-kernel/linux/linux-rockchip_6.1/0007-arm64-dts-rockchip-rk356x-Add-missing-rknpu-interrup.patch
+@@ -0,0 +1,26 @@
++From 3a11c97ad7b06a0ee29e0eaf0b3cb4217f2fc596 Mon Sep 17 00:00:00 2001
++From: maivananh111 <aaanh01@gmail.com>
++Date: Tue, 7 Oct 2025 23:16:33 +0700
++Subject: [PATCH] arm64: dts: rockchip: rk356x: Add missing rknpu interrupt
++ name
++
++Signed-off-by: maivananh111 <aaanh01@gmail.com>
++---
++ arch/arm64/boot/dts/rockchip/rk356x.dtsi | 1 +
++ 1 file changed, 1 insertion(+)
++
++diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
++index bada80a16e9c..c5e2f5eda507 100644
++--- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
+++++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
++@@ -1101,6 +1101,7 @@ rknpu: npu@fde40000 {
++ 		compatible = "rockchip,rk3568-rknpu", "rockchip,rknpu";
++ 		reg = <0x0 0xfde40000 0x0 0x10000>;
++ 		interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
+++		interrupt-names = "npu_irq";
++ 		clocks = <&scmi_clk 2>, <&cru CLK_NPU>, <&cru ACLK_NPU>, <&cru HCLK_NPU>;
++ 		clock-names = "scmi_clk", "clk", "aclk", "hclk";
++ 		assigned-clocks = <&cru CLK_NPU>;
++-- 
++2.34.1
++
+-- 
+2.34.1
+

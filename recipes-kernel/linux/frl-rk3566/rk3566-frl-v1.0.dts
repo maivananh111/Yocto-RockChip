@@ -122,22 +122,38 @@
 			linux,default-trigger = "default-on";
 		};
 	};
+
+	bat: battery {
+        compatible = "simple-battery";
+        voltage-min-design-microvolt = <3200000>;
+        energy-full-design-microwatt-hours = <2500000>;
+        charge-full-design-microamp-hours = <1430000>;
+	};
 };
 
-&rk809_sound {
-	simple-audio-card,widgets =
-		"Microphone", "Mic Jack",
-		"Headphone", "Headphones";
-	simple-audio-card,routing =
-		"ADC L", "MICL",
-		"ADC R", "MICR",
-		"HPOL", "DAC L",
-		"HPOR", "DAC R",
-		"MICL", "Mic Jack",
-		"MICR", "Mic Jack",
-		"Headphones", "HPOL",
-		"Headphones", "HPOR";
+&es8388_sound {
+	spk-con-gpio = <&gpio0 RK_PC3 GPIO_ACTIVE_HIGH>;
+	rockchip,pre-power-on-delay-ms = <30>;
+	rockchip,post-power-down-delay-ms = <40>;
+	rockchip,audio-routing =
+		"Headphone", "LOUT1",
+		"Headphone", "ROUT1",
+		"Speaker", "LOUT1",
+		"Speaker", "ROUT1",
+		"LINPUT1", "Main Mic",
+		"RINPUT1", "Main Mic",
+		"LINPUT1", "Headset Mic",
+		"RINPUT1", "Headset Mic";
 };
+
+// &gpio0 {
+// 	amp-en-hog {
+// 		gpio-hog;
+// 		gpios = <RK_PC3 GPIO_ACTIVE_HIGH>;
+// 		line-name = "AMPLI-EN";
+// 		output-high;
+// 	};
+// };
 
 &sdmmc1 {
     bus-width = <4>;
@@ -175,9 +191,10 @@
 	status = "okay";
 	clock-frequency = <100000>;
 
-	fuel-gauge@55 {
-		compatible = "ti,bq27426";
+	bq27441: fuel-gauge@55 {
+		compatible = "ti,bq27441";
 		reg = <0x55>;
+		monitored-battery = <&bat>;
 	};
 };
 

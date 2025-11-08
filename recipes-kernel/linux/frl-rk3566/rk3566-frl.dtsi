@@ -18,21 +18,14 @@
 	model = "FRL RK3566 Custom";
 	compatible = "frl,rk3566", "rockchip,rk3566";
 
-	rk809_sound: rk809-sound {
-		compatible = "simple-audio-card";
-		simple-audio-card,format = "i2s";
-		simple-audio-card,name = "rockchip,rk809-codec";
-		simple-audio-card,mclk-fs = <256>;
-
-		simple-audio-card,dai-link@0 {
-			format = "i2s";
-			cpu {
-				sound-dai = <&i2s1_8ch>;
-			};
-			codec {
-				sound-dai = <&rk809_codec 0>;
-			};
-		};
+	es8388_sound: es8388-sound {
+		status = "okay";
+		compatible = "rockchip,multicodecs-card";
+		rockchip,card-name = "es8388";
+		rockchip,format = "i2s";
+		rockchip,mclk-fs = <256>;
+		rockchip,cpu = <&i2s1_8ch>;
+		rockchip,codec = <&es8388>;
 	};
 
 	usbpwr_vbus: usbpwr-vbus {
@@ -347,10 +340,10 @@
 				};
 			};
 
-			vcc3v3_sd: SWITCH_REG2 {
+			vcc3v3_codec: SWITCH_REG2 {
 				regulator-always-on;
 				regulator-boot-on;
-				regulator-name = "vcc3v3_sd";
+				regulator-name = "vcc3v3_codec";
 				regulator-state-mem {
 					regulator-off-in-suspend;
 				};
@@ -360,17 +353,26 @@
 		rk809_codec: codec {
 			#sound-dai-cells = <0>;
 			compatible = "rockchip,rk809-codec", "rockchip,rk817-codec";
-			clocks = <&cru I2S1_MCLKOUT>;
-			clock-names = "mclk";
-			assigned-clocks = <&cru I2S1_MCLKOUT>, <&cru I2S1_MCLK_TX_IOE>;
-			assigned-clock-rates = <12288000>;
-			assigned-clock-parents = <&cru I2S1_MCLKOUT_TX>, <&cru I2S1_MCLKOUT_TX>;
-			pinctrl-names = "default";
-			pinctrl-0 = <&i2s1m0_mclk>;
-			hp-volume = <20>;
-			capture-volume = <20>;
-			status = "okay";
+			status = "disabled";
 		};
+	};
+
+	es8388: es8388@10 {
+		status = "okay";
+		#sound-dai-cells = <0>;
+		compatible = "everest,es8388", "everest,es8323";
+		reg = <0x10>;
+		DVDD-supply = <&vcc3v3_pmu>;
+		PVDD-supply = <&vcc3v3_pmu>;
+		AVDD-supply = <&vccio_acodec>;
+		HPVDD-supply = <&vccio_acodec>;
+		clocks = <&cru I2S1_MCLKOUT>;
+		clock-names = "mclk";
+		assigned-clocks = <&cru I2S1_MCLKOUT>, <&cru I2S1_MCLK_TX_IOE>;
+		assigned-clock-rates = <12288000>;
+		assigned-clock-parents = <&cru I2S1_MCLKOUT_TX>, <&cru I2S1_MCLKOUT_TX>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&i2s1m0_mclk>;
 	};
 };
 
@@ -471,6 +473,7 @@
 };
 
 &u2phy0_otg {
+	phy-supply = <&usbpwr_vbus>;
 	status = "okay";
 };
 
