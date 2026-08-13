@@ -7,6 +7,7 @@ require linux-rockchip.inc
 inherit local-git
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/frl-rk3566:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/opi3b-rk3566:"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = " \
@@ -15,6 +16,9 @@ SRC_URI = " \
 	file://rk3566-frl-v1.0.dts \
 	file://rk3566-frl.dtsi \
 	file://rk3566-frl.cfg \
+	file://rk3566-opi3b-v1.0.dts \
+	file://rk3566-opi3b.dtsi \
+	file://rk3566-opi3b.cfg \
 "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
@@ -32,4 +36,6 @@ EXTRA_OEMAKE += "KCFLAGS=-Wno-error"
 do_configure:prepend() {
     cp ${WORKDIR}/rk3566-frl-v1.0.dts ${S}/arch/arm64/boot/dts/rockchip/
     cp ${WORKDIR}/rk3566-frl.dtsi ${S}/arch/arm64/boot/dts/rockchip/
+	cp ${WORKDIR}/rk3566-opi3b-v1.0.dts ${S}/arch/arm64/boot/dts/rockchip/
+    cp ${WORKDIR}/rk3566-opi3b.dtsi ${S}/arch/arm64/boot/dts/rockchip/
 }

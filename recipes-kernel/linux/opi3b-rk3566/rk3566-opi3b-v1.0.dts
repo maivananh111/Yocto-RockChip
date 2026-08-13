@@ -1,0 +1,147 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2024 Rockchip Electronics Co., Ltd.
+ *
+ */
+
+/dts-v1/;
+#include "rk3566-opi3b.dtsi"
+
+/ {
+	sdio_pwrseq: sdio-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_enable_h>;
+		clocks = <&rk809 1>;
+		clock-names = "ext_clock";
+		reset-gpios = <&gpio0 RK_PD3 GPIO_ACTIVE_LOW>;
+	};
+
+	wireless_wlan: wireless-wlan {
+		compatible = "wlan-platdata";
+		wifi_chip_type = "ap6256";
+		rockchip,grf = <&grf>;
+		clocks = <&rk809 1>;
+		clock-names = "clk_wifi";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_host_wake_irq>;
+		WIFI,host_wake_irq = <&gpio0 RK_PD6 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
+	wireless_bluetooth: wireless-bluetooth {
+		compatible = "bluetooth-platdata";
+		clocks = <&rk809 1>;
+		clock-names = "ext_clock";
+		uart_rts_gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
+		pinctrl-names = "default", "rts_gpio";
+		pinctrl-0 = <&uart1m0_rtsn &bt_poweren &bt_wake_l &bt_host_wake_irq>;
+		pinctrl-1 = <&uart1m0_rtsn_gpios>;
+		BT,power_gpio    = <&gpio2 RK_PB7 GPIO_ACTIVE_HIGH>;
+		BT,wake_gpio     = <&gpio2 RK_PC1 GPIO_ACTIVE_HIGH>;
+		BT,wake_host_irq = <&gpio2 RK_PC0 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
+	wireless_bluetooth_sound: wireless-bluetooth-sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "dsp_b";
+		simple-audio-card,bitclock-inversion;
+		simple-audio-card,mclk-fs = <256>;
+		simple-audio-card,name = "rockchip,bt";
+		#simple-audio-card,bitclock-master = <&sound2_master>;
+		#simple-audio-card,frame-master = <&sound2_master>;
+		status = "okay";
+
+		simple-audio-card,cpu {
+			sound-dai = <&i2s2_2ch>;
+		};
+
+		sound2_master:simple-audio-card,codec {
+			#sound-dai-cells = <0>;
+			sound-dai = <&wireless_bluetooth_sco>;
+		};
+	};
+
+	wireless_bluetooth_sco: wireless-bluetooth-sco {
+		compatible = "delta,dfbmcs320";
+		#sound-dai-cells = <0>;
+		status = "okay";
+	};
+};
+
+&es8388_sound {
+	rockchip,audio-routing =
+		"Headphone", "LOUT1",
+		"Headphone", "ROUT1",
+		"Speaker", "LOUT1",
+		"Speaker", "ROUT1",
+		"LINPUT1", "Main Mic",
+		"RINPUT1", "Main Mic",
+		"LINPUT1", "Headset Mic",
+		"RINPUT1", "Headset Mic";
+};
+
+&sdmmc1 {
+    bus-width = <4>;
+	cap-sd-highspeed;
+	cap-sdio-irq;
+	keep-power-in-suspend;
+	mmc-pwrseq = <&sdio_pwrseq>;
+	no-mmc;
+	no-sd;
+	non-removable;
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_clk &sdmmc1_cmd>;
+	sd-uhs-sdr104;
+	vmmc-supply = <&vcc_3v3>;
+	vqmmc-supply = <&vcc_1v8>;
+	status = "okay";
+};
+	
+&uart1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn>;
+};
+
+&i2s2_2ch {
+	status = "okay";
+	rockchip,bclk-fs = <32>;
+	pinctrl-0 = <&i2s2m0_sclktx
+			     &i2s2m0_lrcktx
+			     &i2s2m0_sdi
+			     &i2s2m0_sdo>;
+};
+
+&pinctrl {
+	sdio-pwrseq {
+		wifi_enable_h: wifi-enable-h {
+			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+
+    wireless-wlan {
+        wifi_host_wake_irq: wifi-host-wake-irq {
+            rockchip,pins = <0 RK_PD6 RK_FUNC_GPIO &pcfg_pull_down>;
+        };
+    };
+
+    wireless-bluetooth {
+		uart1m0_rtsn_gpios: uart1m0-rtsn-gpios {
+			rockchip,pins = <2 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		bt_poweren: bt-poweren {
+			rockchip,pins = <2 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		bt_host_wake_irq: bt-host-wake-irq {
+			rockchip,pins = <2 RK_PC0 RK_FUNC_GPIO &pcfg_pull_down>;
+		};
+
+		bt_wake_l: bt-wake-l {
+			rockchip,pins = <2 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+    };
+};
