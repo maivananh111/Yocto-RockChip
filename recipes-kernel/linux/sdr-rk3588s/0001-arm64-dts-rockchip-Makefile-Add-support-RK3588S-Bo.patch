@@ -1,0 +1,21 @@
+From 0673c79418c73fb78060637e151b7910e21cbb0c Mon Sep 17 00:00:00 2001
+From: Y Pham <ypham8066@gmail.com>
+Date: Fri, 21 Aug 2026 15:16:46 +0000
+Subject: [PATCH] arm64: dts: rockchip: Makefile: Add support RK3588S Board 2
+
+---
+ arch/arm64/boot/dts/rockchip/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 789eba4444c0..7ef3c0b0f376 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -378,3 +378,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5d.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-tablet-rk806-single-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-tablet-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-tablet-v11.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-sdr-board2.dtb
+-- 
+2.44.4
+
